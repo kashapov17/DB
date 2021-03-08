@@ -21,7 +21,7 @@ begin transaction
 		declare @bound_2 as int = 90;
 		select [Наименование]
 			from [Товар]
-			where ID in (select ID from [Склад] where [Количество] >= @bound_1 and [Количество] <= @bound_2)
+			where ID in (select ID from [Склад] where [Количество] between @bound_1 and @bound_2)
 			order by [Наименование] desc;
 	go
 		-- Вывести поставщиков, которые хотя бы раз осуществили поставку, в алфавитном порядке.
@@ -34,7 +34,7 @@ begin transaction
 		declare @purchase_date as date = '2021-01-17';
 		select [Фамилия],[Имя],[Отчество] 
 			from [Клиент]
-			where ID in (select КодКлиента from [Сделка] where DATEDIFF(dd, @purchase_date, Дата) <= 30 and  DATEDIFF(dd, @purchase_date, Дата) >=0);
+			where ID in (select КодКлиента from [Сделка] where datediff(dd, @purchase_date, Дата) between 0 and 30);
 	go 
 		-- Вывести список товаров, названия которых начинающиеся с букв «Ш» и «Р», стоимость которых не более 20% от максимальной
 		select [Наименование] 
