@@ -1,8 +1,19 @@
-CREATE VIEW highmarkers as
-	select TOP (select count(*) from Изучение where Оценка = 5) s.Фамилия + ' ' + s.Имя + ' ' + s.Отчество as N'ФИО', s.КодГруппы as N'Номер группы', d.Семестр, d.Название from Студенты as s
-		join Изучение as e
-			on e.НомерЗачетнойКнижкиСтудента = s.НомерЗачетнойКнижки
-		join Дисциплины as d
-			on d.ID = e.КодДисциплины
-		where e.Оценка like 5
-		order by d.Семестр, s.КодГруппы
+drop view if exists dbo.highmarkers
+
+-- Показать в представлении студентов, сдававших сессии на «Отлично». Вывести
+-- Ф.И.О., номер группы и семестр. Группировать по семестрам и группам. 
+go
+create view highmarkers as
+	select t.Фамилия, t.Имя, t.Отчество, t.КодГруппы, t.Семестр
+	from (
+		select s.Фамилия, s.Имя, S.Отчество, s.КодГруппы, d.Семестр, AVG(e.Оценка) avgMark
+		from Изучение as e
+			join Дисциплины as d 
+				on e.КодДисциплины = d.ID
+			join Студенты as s 
+				on e.НомерЗачетнойКнижкиСтудента = s.НомерЗачетнойКнижки
+		  group by s.Фамилия, s.Имя, s.Отчество, s.КодГруппы, d.Семестр) as t
+	where t.avgMark = 3
+	group by t.Фамилия, t.Имя, t.Отчество, t.КодГруппы, t.Семестр;
+go
+select * from highmarkers;
