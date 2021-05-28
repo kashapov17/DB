@@ -1,3 +1,4 @@
+use Деканат
 drop trigger if exists disciplineDelete
 drop trigger if exists headmanСhange
 drop trigger if exists examInsert
@@ -67,10 +68,10 @@ insert Дисциплины values
 delete from Дисциплины WHERE ID = 1;
 delete from Дисциплины WHERE Название = N'Философывааываия';
 go 
-update Группы set Староста = 3501 WHERE ID = 1;
+update Группы set Староста = 3500 WHERE ID = 1;
 go
 insert Изучение values
-	(3500, 7, '2018-07-02', 1);
+	(3500, 1, '2018-12-02', 1);
 
 select * 
 	from Изучение where НомерЗачетнойКнижкиСтудента = 3500 and КодДисциплины =1
